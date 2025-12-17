@@ -1,0 +1,14 @@
+# Gemini MCP Configuration
+# Default model: gemini-3-pro-preview
+# Sandbox mode: read-only (change to workspace-write for file access)
+
+[prompt]
+base_instructions = "You are a helpful AI assistant integrated with Claude Code for code review and analysis."
+
+[session]
+model = "gemini-3-pro-preview"
+sandbox = "read-only"
+cwd = "/path/to/your/project"
+
+[developer]
+instructions = "Focus on code quality, scalability, and best practices."
