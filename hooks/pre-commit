@@ -1,0 +1,10 @@
+#!/bin/sh
+# Pre-commit hook for Gemini MCP Project
+# Run linting, secret scans, etc.
+
+echo "Running pre-commit checks for Gemini MCP..."
+# Example: npm run lint --if-present
+# Example: git secrets --scan
+
+# Exit with error if checks fail (add your checks here)
+exit 0
