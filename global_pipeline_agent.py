@@ -16,7 +16,6 @@ import os
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-import subprocess
 
 REPO_ROOT = Path(__file__).resolve().parent
 OUTPUT_PATH = Path("/tmp/global_pipeline_agent_context.json")
@@ -123,9 +122,9 @@ class GlobalPipelineAgent:
                         data = json.load(f)
                     servers = data.get("mcpServers", {})
                     # Count enabled servers
-                    enabled = [s for s, config in servers.items() if config.get("enabled") == True]
+                    enabled = [s for s, cfg in servers.items() if cfg.get("enabled")]
                     return len(enabled)
-                except:
+                except (json.JSONDecodeError, KeyError, TypeError):
                     pass
             return 0
 
@@ -133,7 +132,7 @@ class GlobalPipelineAgent:
             with open(filtered_path, 'r') as f:
                 data = json.load(f)
             return len(data.get("mcpServers", {}))
-        except:
+        except (json.JSONDecodeError, KeyError, TypeError, FileNotFoundError):
             return 0
 
     def _load_skills_reference(self) -> List[Dict[str, str]]:
@@ -341,17 +340,17 @@ def main():
     print(f"MCP servers enabled: {result['installer_details']['mcp_servers_enabled']}")
     print()
 
-        if result['prompt_analysis']['prompt']:
-            print("📝 Prompt Analysis:")
-            print(f"  Intent: {result['prompt_analysis']['detected_intent']}")
-            print(f"  Recommended phase: {result['prompt_analysis']['recommended_phase']}")
-            if result['prompt_analysis']['recommended_skills']:
-                print(f"  Recommended skills: {', '.join(result['prompt_analysis']['recommended_skills'])}")
-            if result['prompt_analysis']['workflow_guidance']:
-                print("  Guidance:")
-                for guidance in result['prompt_analysis']['workflow_guidance'][:MAX_GUIDANCE_LINES]:
-                    print(f"    • {guidance}")
-            print()
+    if result['prompt_analysis']['prompt']:
+        print("📝 Prompt Analysis:")
+        print(f"  Intent: {result['prompt_analysis']['detected_intent']}")
+        print(f"  Recommended phase: {result['prompt_analysis']['recommended_phase']}")
+        if result['prompt_analysis']['recommended_skills']:
+            print(f"  Recommended skills: {', '.join(result['prompt_analysis']['recommended_skills'])}")
+        if result['prompt_analysis']['workflow_guidance']:
+            print("  Guidance:")
+            for guidance in result['prompt_analysis']['workflow_guidance'][:MAX_GUIDANCE_LINES]:
+                print(f"    • {guidance}")
+        print()
 
     print("🚀 Quick Start:")
     print("  1. Review the 8-phase workflow")
