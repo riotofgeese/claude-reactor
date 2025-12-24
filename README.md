@@ -823,3 +823,85 @@ MIT License - see [LICENSE](LICENSE) for details.
 Made with Claude Opus 4.5
 
 </div>
+
+---
+
+## MCP Server Sources
+
+Where to find and install each MCP server used in this pipeline:
+
+### Core Infrastructure
+
+| Server | Source | Install |
+|--------|--------|---------|
+| **unified-orchestrator** | [riotofgeese/unified-orchestrator](https://github.com/riotofgeese/unified-orchestrator) | `npm install` |
+| **memlayer** | [anthropics/memlayer-mcp](https://github.com/anthropics/memlayer-mcp) | `pip install memlayer` |
+| **code-execution-mode** | [anthropics/code-execution-mcp](https://github.com/anthropics/code-execution-mcp) | `npm install` |
+| **ace** | [cyanheads/ace-mcp](https://github.com/cyanheads/ace-mcp) | `npm install` |
+
+### Thinking & Planning
+
+| Server | Source | Install |
+|--------|--------|---------|
+| **sequential-thinking** | [anthropics/sequential-thinking-mcp](https://github.com/anthropics/sequential-thinking-mcp) | `npx -y @anthropic-ai/mcp-server-sequential-thinking` |
+| **code-reasoning** | Built-in | Part of sequential-thinking |
+
+### Context & Documentation
+
+| Server | Source | Install |
+|--------|--------|---------|
+| **context7** | [upstash/context7](https://github.com/upstash/context7) | `npx -y @upstash/context7-mcp` |
+
+### Browser & Testing
+
+| Server | Source | Install |
+|--------|--------|---------|
+| **browser-tools** | [anthropics/mcp-browser-tools](https://github.com/anthropics/mcp-browser-tools) | Chrome extension + MCP server |
+| **flowlens** | [AlanJudi/flowlens-mcp](https://github.com/AlanJudi/flowlens-mcp) | `pip install flowlens-mcp` |
+
+### AI Models
+
+| Server | Source | Install |
+|--------|--------|---------|
+| **gemini** | [riotofgeese/gemini-mcp](https://github.com/riotofgeese/gemini-mcp) | `npm install && npm run build` |
+| **deepseek** | [deepseek-ai/deepseek-mcp](https://github.com/deepseek-ai/deepseek-mcp) | `npm install` |
+| **glm** | [THUDM/glm-mcp](https://github.com/THUDM/glm-mcp) | `npm install` |
+| **codex** | [openai/codex-mcp](https://github.com/openai/codex-mcp) | `npm install -g @openai/codex` |
+
+### Development Tools
+
+| Server | Source | Install |
+|--------|--------|---------|
+| **serena** | [oramasearch/serena](https://github.com/oramasearch/serena) | `pip install serena-mcp` |
+| **fast-port-checker** | Built-in | Native tool |
+| **omada-mcp-server** | [riotofgeese/omada-mcp](https://github.com/riotofgeese/omada-mcp) | `npm install` |
+
+### Example MCP Configuration
+
+Add to `~/.claude/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "gemini": {
+      "command": "node",
+      "args": ["/path/to/gemini-mcp/dist/index.js"],
+      "env": {
+        "GEMINI_API_KEY": "your-key-here"
+      }
+    },
+    "memlayer": {
+      "command": "python",
+      "args": ["-m", "memlayer.server"],
+      "env": {
+        "MEMLAYER_DB_PATH": "~/.claude/memory.db"
+      }
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-sequential-thinking"]
+    }
+  }
+}
+```
+
