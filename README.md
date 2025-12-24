@@ -356,53 +356,85 @@ Edit `.claude/settings.json`:
 
 ## MCP Servers
 
-### Core Infrastructure (4 servers)
+Claude Reactor integrates 16 MCP servers providing ~150 tools. Each server links to its source repository.
 
-| Server | Tools | Purpose |
-|--------|-------|---------|
-| **unified-orchestrator** | 25 | Session management, memory, infrastructure |
-| **memlayer** | 8 | Project-isolated persistent memory |
-| **code-execution-mode** | 3 | v2.0 sandbox execution (PRIMARY) |
-| **ace** | 20 | Code execution with learning playbooks |
+### Core Infrastructure
 
-### Thinking & Planning (2 servers)
+| Server | Tools | Purpose | Source | Install |
+|--------|-------|---------|--------|---------|
+| **unified-orchestrator** | 25 | Session management, memory, infrastructure | [GitHub](https://github.com/riotofgeese/unified-orchestrator) | `npm install` |
+| **memlayer** | 8 | Project-isolated persistent memory | [GitHub](https://github.com/anthropics/memlayer-mcp) | `pip install memlayer` |
+| **code-execution-mode** | 3 | v2.0 sandbox execution (PRIMARY) | [GitHub](https://github.com/anthropics/code-execution-mcp) | `npm install` |
+| **ace** | 20 | Code execution with learning playbooks | [GitHub](https://github.com/cyanheads/ace-mcp) | `npm install` |
 
-| Server | Tools | Purpose |
-|--------|-------|---------|
-| **sequential-thinking** | 1 | Multi-step planning with revisions |
-| **code-reasoning** | 1 | Complex problem decomposition |
+### Thinking & Planning
 
-### Context & Documentation (1 server)
+| Server | Tools | Purpose | Source | Install |
+|--------|-------|---------|--------|---------|
+| **sequential-thinking** | 1 | Multi-step planning with revisions | [GitHub](https://github.com/anthropics/sequential-thinking-mcp) | `npx -y @anthropic-ai/mcp-server-sequential-thinking` |
+| **code-reasoning** | 1 | Complex problem decomposition | Built-in | Part of sequential-thinking |
 
-| Server | Tools | Purpose |
-|--------|-------|---------|
-| **context7** | 2 | Up-to-date library documentation |
+### Context & Documentation
 
-### Browser & Testing (2 servers)
+| Server | Tools | Purpose | Source | Install |
+|--------|-------|---------|--------|---------|
+| **context7** | 2 | Up-to-date library documentation | [GitHub](https://github.com/upstash/context7) | `npx -y @upstash/context7-mcp` |
 
-| Server | Tools | Purpose |
-|--------|-------|---------|
-| **browser-tools** | 15 | Console logs, screenshots, audits |
-| **flowlens** | 7 | Browser flow recording & analysis |
+### Browser & Testing
 
-### AI Models (3 servers)
+| Server | Tools | Purpose | Source | Install |
+|--------|-------|---------|--------|---------|
+| **browser-tools** | 15 | Console logs, screenshots, audits | [GitHub](https://github.com/anthropics/mcp-browser-tools) | Chrome extension + server |
+| **flowlens** | 7 | Browser flow recording & analysis | [GitHub](https://github.com/AlanJudi/flowlens-mcp) | `pip install flowlens-mcp` |
 
-| Server | Model | Purpose |
-|--------|-------|---------|
-| **gemini** | gemini-3-flash-preview | Roundtable consultation |
-| **deepseek** | deepseek-reasoner | Code analysis |
-| **glm** | glm-4.6 | Alternative perspective |
+### AI Models (Roundtable)
 
-### Development Tools (4 servers)
+| Server | Model | Purpose | Source | Install |
+|--------|-------|---------|--------|---------|
+| **gemini** | gemini-3-pro-preview | Roundtable consultation | [GitHub](https://github.com/riotofgeese/gemini-mcp) | `npm install && npm run build` |
+| **codex** | o4-mini | Code execution agent | [GitHub](https://github.com/openai/codex) | `npm install -g @openai/codex` |
+| **deepseek** | deepseek-reasoner | Code analysis | [GitHub](https://github.com/deepseek-ai/deepseek-mcp) | `npm install` |
+| **glm** | glm-4.6 | Alternative perspective | [GitHub](https://github.com/THUDM/glm-mcp) | `npm install` |
 
-| Server | Tools | Purpose |
-|--------|-------|---------|
-| **serena** | 10 | Semantic code navigation |
-| **codex** | 2 | Bun/Codex execution |
-| **fast-port-checker** | 3 | Port availability |
-| **omada-mcp-server** | 15 | Network management |
+### Development Tools
 
-**Total: ~150 tools** (optimized to stay under provider limits)
+| Server | Tools | Purpose | Source | Install |
+|--------|-------|---------|--------|---------|
+| **serena** | 10 | Semantic code navigation | [GitHub](https://github.com/oramasearch/serena) | `pip install serena-mcp` |
+| **fast-port-checker** | 3 | Port availability | Built-in | Native tool |
+| **omada-mcp-server** | 15 | Network management | [GitHub](https://github.com/riotofgeese/omada-mcp) | `npm install` |
+
+### Example Configuration
+
+Add to `~/.claude/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "gemini": {
+      "command": "node",
+      "args": ["/path/to/gemini-mcp/dist/index.js"],
+      "env": { "GEMINI_API_KEY": "your-key" }
+    },
+    "memlayer": {
+      "command": "python",
+      "args": ["-m", "memlayer.server"],
+      "env": { "MEMLAYER_DB_PATH": "~/.claude/memory.db" }
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-sequential-thinking"]
+    },
+    "code-execution-mode": {
+      "command": "node",
+      "args": ["/path/to/code-execution-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+**Total: 16 servers, ~150 tools** (optimized to stay under provider limits)
+
 
 ---
 
@@ -823,85 +855,3 @@ MIT License - see [LICENSE](LICENSE) for details.
 Made with Claude Opus 4.5
 
 </div>
-
----
-
-## MCP Server Sources
-
-Where to find and install each MCP server used in this pipeline:
-
-### Core Infrastructure
-
-| Server | Source | Install |
-|--------|--------|---------|
-| **unified-orchestrator** | [riotofgeese/unified-orchestrator](https://github.com/riotofgeese/unified-orchestrator) | `npm install` |
-| **memlayer** | [anthropics/memlayer-mcp](https://github.com/anthropics/memlayer-mcp) | `pip install memlayer` |
-| **code-execution-mode** | [anthropics/code-execution-mcp](https://github.com/anthropics/code-execution-mcp) | `npm install` |
-| **ace** | [cyanheads/ace-mcp](https://github.com/cyanheads/ace-mcp) | `npm install` |
-
-### Thinking & Planning
-
-| Server | Source | Install |
-|--------|--------|---------|
-| **sequential-thinking** | [anthropics/sequential-thinking-mcp](https://github.com/anthropics/sequential-thinking-mcp) | `npx -y @anthropic-ai/mcp-server-sequential-thinking` |
-| **code-reasoning** | Built-in | Part of sequential-thinking |
-
-### Context & Documentation
-
-| Server | Source | Install |
-|--------|--------|---------|
-| **context7** | [upstash/context7](https://github.com/upstash/context7) | `npx -y @upstash/context7-mcp` |
-
-### Browser & Testing
-
-| Server | Source | Install |
-|--------|--------|---------|
-| **browser-tools** | [anthropics/mcp-browser-tools](https://github.com/anthropics/mcp-browser-tools) | Chrome extension + MCP server |
-| **flowlens** | [AlanJudi/flowlens-mcp](https://github.com/AlanJudi/flowlens-mcp) | `pip install flowlens-mcp` |
-
-### AI Models
-
-| Server | Source | Install |
-|--------|--------|---------|
-| **gemini** | [riotofgeese/gemini-mcp](https://github.com/riotofgeese/gemini-mcp) | `npm install && npm run build` |
-| **deepseek** | [deepseek-ai/deepseek-mcp](https://github.com/deepseek-ai/deepseek-mcp) | `npm install` |
-| **glm** | [THUDM/glm-mcp](https://github.com/THUDM/glm-mcp) | `npm install` |
-| **codex** | [openai/codex-mcp](https://github.com/openai/codex-mcp) | `npm install -g @openai/codex` |
-
-### Development Tools
-
-| Server | Source | Install |
-|--------|--------|---------|
-| **serena** | [oramasearch/serena](https://github.com/oramasearch/serena) | `pip install serena-mcp` |
-| **fast-port-checker** | Built-in | Native tool |
-| **omada-mcp-server** | [riotofgeese/omada-mcp](https://github.com/riotofgeese/omada-mcp) | `npm install` |
-
-### Example MCP Configuration
-
-Add to `~/.claude/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "gemini": {
-      "command": "node",
-      "args": ["/path/to/gemini-mcp/dist/index.js"],
-      "env": {
-        "GEMINI_API_KEY": "your-key-here"
-      }
-    },
-    "memlayer": {
-      "command": "python",
-      "args": ["-m", "memlayer.server"],
-      "env": {
-        "MEMLAYER_DB_PATH": "~/.claude/memory.db"
-      }
-    },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/mcp-server-sequential-thinking"]
-    }
-  }
-}
-```
-
